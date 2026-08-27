@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Keresés" description="Keresés a hírek címében, bevezetőjében, kategóriájában és címkéiben.">
+  <section class="section">
+    <div class="container container--narrow">
+      <span class="eyebrow">Keresés</span>
+      <h1>Keresés a honlapon</h1>
+      <p class="muted">A keresés a hírek címében, rövid bevezetőjében, kategóriájában és címkéiben működik.</p>
+
+      <form id="search-form" role="search">
+        <label class="sr-only" for="q">Keresőkifejezés</label>
+        <input id="q" name="q" type="search" placeholder="Mit keres?" autocomplete="off" />
+        <button class="btn btn-primary" type="submit">Keresés</button>
+      </form>
+
+      <ul role="list" id="results" class="results-list"></ul>
+      <p id="empty-state" class="muted" hidden>Nincs a keresésnek megfelelő találat.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: var(--text-2xl);
+    margin-block: var(--space-2);
+  }
+  .muted {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+  #search-form {
+    display: flex;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+  }
+  #search-form input {
+    flex: 1;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+  .results-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .result-item {
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  .result-item h2 {
+    font-size: var(--text-base);
+    margin-bottom: var(--space-1);
+  }
+  .result-item p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .result-meta {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-top: var(--space-1);
+  }
+</style>
+
+<script is:inline define:vars={{ base: import.meta.env.BASE_URL }}>
+  (function () {
+    function withBase(p) {
+      var cleanBase = base.endsWith('/') ? base : base + '/';
+      return cleanBase + p.replace(/^\//, '');
+    }
+
+    var params = new URLSearchParams(window.location.search);
+    var qInput = document.getElementById('q');
+    var form = document.getElementById('search-form');
+    var results = document.getElementById('results');
+    var emptyState = document.getElementById('empty-state');
+    var initialQ = params.get('q') || '';
+    qInput.value = initialQ;
+
+    var indexData = null;
+
+    function render(query) {
+      results.innerHTML = '';
+      var q = query.trim().toLowerCase();
+      if (!q || !indexData) {
+        emptyState.hidden = true;
+        return;
+      }
+      var matches = indexData.filter(function (item) {
+        var haystack = [item.title, item.excerpt, item.category].concat(item.tags || []).join(' ').toLowerCase();
+        return haystack.indexOf(q) !== -1;
+      });
+      emptyState.hidden = matches.length !== 0;
+      matches.forEach(function (item) {
+        var li = document.createElement('li');
+        li.className = 'result-item';
+        var a = document.createElement('a');
+        a.href = withBase(item.url.replace(/^\//, ''));
+        var h2 = document.createElement('h2');
+        h2.textContent = item.title;
+        a.appendChild(h2);
+        var p = document.createElement('p');
+        p.textContent = item.excerpt;
+        a.appendChild(p);
+        var meta = document.createElement('div');
+        meta.className = 'result-meta';
+        meta.textContent = item.category + ' · ' + (item.tags || []).join(', ');
+        a.appendChild(meta);
+        li.appendChild(a);
+        results.appendChild(li);
+      });
+    }
+
+    fetch(withBase('search-index.json'))
+      .then(function (r) {
+        return r.json();
+      })
+      .then(function (data) {
+        indexData = data;
+        render(initialQ);
+      })
+      .catch(function () {
+        emptyState.hidden = false;
+        emptyState.textContent = 'A keresési index jelenleg nem elérhető.';
+      });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      render(qInput.value);
+      var url = new URL(window.location.href);
+      url.searchParams.set('q', qInput.value);
+      window.history.replaceState({}, '', url);
+    });
+  })();
+</script>

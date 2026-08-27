@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SCHOOL_NAME } from '../../lib/nav';
+---
+<BaseLayout title="Impresszum" description="Impresszum.">
+  <section class="section">
+    <div class="container container--narrow prose">
+      <span class="eyebrow">Impresszum</span>
+      <h1>Impresszum</h1>
+      <p><strong>Fenntartott intézmény neve:</strong> {SCHOOL_NAME}</p>
+      <p>Ez az oldal a 0. verziós prototípus mintatartalma. Az éles impresszum a hivatalos intézményi adatokkal (cím, elérhetőség, OM azonosító, fenntartó, felelős szerkesztő) az éles indulás előtt kerül feltöltésre.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 { font-size: var(--text-2xl); margin-block: var(--space-2) var(--space-6); }
+  p { margin-bottom: var(--space-4); color: var(--color-text-muted); line-height: 1.7; }
+</style>

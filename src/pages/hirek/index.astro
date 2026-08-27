@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { getCollection } from 'astro:content';
+import { withBase, slugify } from '../../lib/nav';
+import { NEWS_CATEGORIES } from '../../content/config';
+
+const allNews = (await getCollection('news', ({ data }) => data.status === 'publikált')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+<BaseLayout title="Hírek" description="Az iskola legfrissebb hírei, kategóriák és címkék szerint szűrhetően.">
+  <section class="section">
+    <div class="container">
+      <div class="page-heading">
+        <span class="eyebrow">Hírek</span>
+        <h1>Az iskola legfrissebb hírei</h1>
+        <p class="muted">Szűrjön kategória szerint, vagy nézze át az összes publikált hírt.</p>
+      </div>
+
+      <div class="filter-bar" role="group" aria-label="Kategória szűrő">
+        <button class="filter-chip is-active" data-filter="all" type="button">Összes</button>
+        {NEWS_CATEGORIES.map((cat) => (
+          <button class="filter-chip" data-filter={slugify(cat)} type="button">{cat}</button>
+        ))}
+      </div>
+
+      <div class="news-grid" id="news-list">
+        {allNews.map((entry) => (
+          <div class="news-item" data-category={slugify(entry.data.category)}>
+            <NewsCard entry={entry} />
+          </div>
+        ))}
+      </div>
+      <p id="no-results" class="muted" hidden>Nincs a szűrésnek megfelelő hír.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-heading {
+    max-width: var(--content-narrow);
+    margin-bottom: var(--space-8);
+  }
+  .page-heading h1 {
+    font-size: var(--text-2xl);
+    margin-block: var(--space-2);
+  }
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-8);
+  }
+  .filter-chip {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+  .filter-chip:hover {
+    border-color: var(--color-primary);
+  }
+  .filter-chip.is-active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-text-inverse);
+  }
+  .news-grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+  .muted {
+    color: var(--color-text-muted);
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var chips = document.querySelectorAll('.filter-chip');
+    var items = document.querySelectorAll('.news-item');
+    var noResults = document.getElementById('no-results');
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        chips.forEach(function (c) {
+          c.classList.remove('is-active');
+        });
+        chip.classList.add('is-active');
+        var filter = chip.getAttribute('data-filter');
+        var visibleCount = 0;
+        items.forEach(function (item) {
+          var match = filter === 'all' || item.getAttribute('data-category') === filter;
+          item.style.display = match ? '' : 'none';
+          if (match) visibleCount++;
+        });
+        if (noResults) noResults.hidden = visibleCount !== 0;
+      });
+    });
+  })();
+</script>

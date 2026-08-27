@@ -1,0 +1,174 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { withBase, slugify } from '../../lib/nav';
+import { DOCUMENT_GROUPS } from '../../content/config';
+
+const allDocs = await getCollection('documents', ({ data }) => data.status === 'publikált');
+const groupAnchors: Record<string, string> = {
+  'Alapdokumentumok': 'alapdokumentumok',
+  'Különös közzétételi lista': 'kulonos-kozzeteteli-lista',
+  'Letölthető nyomtatványok, kérelmek': 'nyomtatvanyok',
+};
+
+function docsFor(group: string) {
+  return allDocs
+    .filter((d) => d.data.group === group && !d.data.archived)
+    .sort((a, b) => a.data.title.localeCompare(b.data.title, 'hu'));
+}
+
+const archived = allDocs.filter((d) => d.data.archived);
+---
+<BaseLayout title="Dokumentumtár" description="Kategorizált, kereshető dokumentumtár: alapdokumentumok, közzétételi lista és letölthető nyomtatványok.">
+  <section class="section">
+    <div class="container">
+      <div class="page-heading">
+        <span class="eyebrow">Dokumentumtár</span>
+        <h1>Dokumentumtár</h1>
+        <p class="muted">A dokumentumok csoportosítva, kereshetően jelennek meg. A 0. verzióban néhány helyőrző mintadokumentum szerepel — a teljes migráció későbbi feladat.</p>
+      </div>
+
+      <div class="doc-search">
+        <label class="sr-only" for="doc-search">Dokumentum keresése</label>
+        <input id="doc-search" type="search" placeholder="Dokumentum keresése cím szerint…" autocomplete="off" />
+      </div>
+
+      {DOCUMENT_GROUPS.map((group) => (
+        <div class="doc-group" id={groupAnchors[group]}>
+          <h2>{group}</h2>
+          <ul role="list" class="doc-list" data-doc-list>
+            {docsFor(group).map((doc) => (
+              <li class="doc-item" data-doc-title={doc.data.title.toLowerCase()}>
+                <div class="doc-item-info">
+                  <span class="doc-icon" aria-hidden="true">📄</span>
+                  <div>
+                    <p class="doc-title">{doc.data.title}</p>
+                    {doc.data.description && <p class="doc-desc">{doc.data.description}</p>}
+                  </div>
+                </div>
+                {doc.data.file ? (
+                  <a class="btn btn-outline doc-download" href={withBase(doc.data.file)} target="_blank" rel="noopener noreferrer">
+                    Megnyitás →
+                  </a>
+                ) : (
+                  <span class="badge badge--muted">Hamarosan feltöltjük</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
+      {archived.length > 0 && (
+        <div class="doc-group" id="archivum">
+          <h2>Archivált dokumentumok</h2>
+          <ul role="list" class="doc-list">
+            {archived.map((doc) => (
+              <li class="doc-item">
+                <div class="doc-item-info">
+                  <span class="doc-icon" aria-hidden="true">🗄️</span>
+                  <div>
+                    <p class="doc-title">{doc.data.title}</p>
+                    <p class="doc-desc">Archivált — {doc.data.group}</p>
+                  </div>
+                </div>
+                {doc.data.file && (
+                  <a class="btn btn-outline doc-download" href={withBase(doc.data.file)} target="_blank" rel="noopener noreferrer">
+                    Megnyitás →
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-heading {
+    max-width: var(--content-narrow);
+    margin-bottom: var(--space-6);
+  }
+  .page-heading h1 {
+    font-size: var(--text-2xl);
+    margin-block: var(--space-2);
+  }
+  .doc-search {
+    margin-bottom: var(--space-10);
+  }
+  .doc-search input {
+    width: 100%;
+    max-width: 28rem;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    font-size: var(--text-sm);
+  }
+  .doc-group {
+    margin-bottom: var(--space-12);
+    scroll-margin-top: var(--space-24);
+  }
+  .doc-group h2 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-divider);
+  }
+  .doc-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .doc-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    flex-wrap: wrap;
+  }
+  .doc-item-info {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+  }
+  .doc-icon {
+    font-size: var(--text-lg);
+  }
+  .doc-title {
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+  .doc-desc {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-top: var(--space-1);
+    max-width: 48ch;
+  }
+  .doc-download {
+    flex: none;
+  }
+  .muted {
+    color: var(--color-text-muted);
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var input = document.getElementById('doc-search');
+    if (!input) return;
+    input.addEventListener('input', function () {
+      var q = input.value.trim().toLowerCase();
+      document.querySelectorAll('.doc-item[data-doc-title]').forEach(function (item) {
+        var title = item.getAttribute('data-doc-title') || '';
+        item.style.display = title.indexOf(q) !== -1 ? '' : 'none';
+      });
+    });
+  })();
+</script>

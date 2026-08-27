@@ -1,0 +1,180 @@
+# Sveltia CMS konfiguráció — Budapest II. Kerületi II. Rákóczi Ferenc Gimnázium honlapja
+#
+# FONTOS — a projekt élesítése előtt:
+# 1. Cseréld ki a `backend.repo` értékét a tényleges GitHub repóra ("felhasznalonev/repo" formában).
+# 2. Állítsd be a GitHub OAuth App-ot és a sveltia-cms-auth Cloudflare Workert — lásd README.md.
+# 3. Ha nem a fő ágra (main) publikálsz, módosítsd a `backend.branch` értékét.
+#
+# A `publish_mode: editorial_workflow` biztosítja a specifikációban kért
+# vázlat → felülvizsgálatra küldve → publikált szerkesztői folyamatot
+# (Git pull request-eken keresztül, jelenleg egyetlen szerkesztővel).
+
+backend:
+  name: github
+  repo: FELHASZNALONEV/rfg-honlap # TODO: cseréld ki az éles repóra
+  branch: main
+  base_url: https://your-sveltia-cms-auth.workers.dev # TODO: sveltia-cms-auth worker URL-je
+  auth_endpoint: auth
+
+publish_mode: editorial_workflow
+
+media_folder: "public/images/feltoltesek"
+public_folder: "/images/feltoltesek"
+
+site_url: https://FELHASZNALONEV.github.io/rfg-honlap
+display_url: https://FELHASZNALONEV.github.io/rfg-honlap
+logo_url: /favicon.svg
+
+locale: "hu"
+
+collections:
+  - name: "hirek"
+    label: "Hírek"
+    label_singular: "Hír"
+    folder: "src/content/news"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} — {{category}} ({{status}})"
+    sortable_fields: ["pubDate", "title", "status"]
+    view_filters:
+      - label: "Publikált"
+        field: status
+        pattern: "publikált"
+      - label: "Vázlat"
+        field: status
+        pattern: "vázlat"
+      - label: "Felülvizsgálatra küldve"
+        field: status
+        pattern: "felülvizsgálatra küldve"
+    fields:
+      - { label: "Cím", name: "title", widget: "string" }
+      - { label: "Rövid bevezető (excerpt)", name: "excerpt", widget: "text" }
+      - label: "Elsődleges kategória"
+        name: "category"
+        widget: "select"
+        options:
+          - "Hivatalos tájékoztatók"
+          - "Tanév rendje"
+          - "Iskolai élet"
+          - "Versenyek és eredmények"
+          - "Közösségeink"
+          - "Felvételi"
+          - "Rákóczi Röplap"
+      - { label: "Címkék", name: "tags", widget: "list", default: [], required: false }
+      - { label: "Publikálás dátuma", name: "pubDate", widget: "datetime" }
+      - { label: "Lejárati dátum (opcionális)", name: "expiryDate", widget: "datetime", required: false }
+      - label: "Állapot"
+        name: "status"
+        widget: "select"
+        default: "vázlat"
+        options: ["vázlat", "felülvizsgálatra küldve", "publikált"]
+      - { label: "Kiemelt kép (opcionális)", name: "image", widget: "image", required: false, media_library: { config: { max_file_size: 5000000 } } }
+      - { label: "Kép alternatív szövege (kép esetén KÖTELEZŐ)", name: "imageAlt", widget: "string", required: false, hint: "Ha van kép, ez a mező kitöltése kötelező a specifikáció szerint." }
+      - { label: "Szerző (opcionális)", name: "author", widget: "string", required: false }
+      - { label: "Kapcsolódó dokumentum azonosítója (opcionális)", name: "relatedDocument", widget: "string", required: false, hint: "A dokumentum fájlnevének kiterjesztés nélküli része." }
+      - { label: "Kapcsolódó külső link (opcionális)", name: "relatedLink", widget: "string", required: false }
+      - { label: "Megjelenjen a főoldal kiemelt hírként?", name: "featured", widget: "boolean", default: false }
+      - { label: "Teljes szöveg", name: "body", widget: "markdown" }
+
+  - name: "esemenyek"
+    label: "Események"
+    label_singular: "Esemény"
+    folder: "src/content/events"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} — {{startDate}}"
+    sortable_fields: ["startDate", "title", "status"]
+    fields:
+      - { label: "Esemény neve", name: "title", widget: "string" }
+      - { label: "Kezdés dátuma/időpontja", name: "startDate", widget: "datetime" }
+      - { label: "Befejezés dátuma/időpontja (opcionális)", name: "endDate", widget: "datetime", required: false }
+      - { label: "Helyszín", name: "location", widget: "string" }
+      - { label: "Leírás", name: "description", widget: "text" }
+      - label: "Célközönség"
+        name: "audience"
+        widget: "select"
+        default: "mindenki"
+        options: ["diákok", "szülők", "mindenki"]
+      - { label: "Kapcsolódó hír azonosítója (opcionális)", name: "relatedNews", widget: "string", required: false }
+      - { label: "Kapcsolódó dokumentum azonosítója (opcionális)", name: "relatedDocument", widget: "string", required: false }
+      - { label: "Megjelenjen a főoldalon kiemelten?", name: "featured", widget: "boolean", default: false }
+      - label: "Állapot"
+        name: "status"
+        widget: "select"
+        default: "vázlat"
+        options: ["vázlat", "felülvizsgálatra küldve", "publikált"]
+
+  - name: "dokumentumok"
+    label: "Dokumentumtár"
+    label_singular: "Dokumentum"
+    folder: "src/content/documents"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} — {{group}}"
+    sortable_fields: ["title", "group", "status"]
+    fields:
+      - { label: "Cím", name: "title", widget: "string" }
+      - label: "Csoport"
+        name: "group"
+        widget: "select"
+        options:
+          - "Alapdokumentumok"
+          - "Különös közzétételi lista"
+          - "Letölthető nyomtatványok, kérelmek"
+      - { label: "Rövid magyarázat (opcionális)", name: "description", widget: "text", required: false }
+      - { label: "Érvényesség kezdete (opcionális)", name: "validFrom", widget: "datetime", required: false }
+      - { label: "Érvényesség vége (opcionális)", name: "validUntil", widget: "datetime", required: false }
+      - { label: "Feltöltött fájl (jellemzően PDF)", name: "file", widget: "file", required: false }
+      - { label: "Archivált?", name: "archived", widget: "boolean", default: false }
+      - label: "Állapot"
+        name: "status"
+        widget: "select"
+        default: "vázlat"
+        options: ["vázlat", "felülvizsgálatra küldve", "publikált"]
+
+  - name: "oldalak"
+    label: "Egyedi oldalak"
+    label_singular: "Oldal"
+    files:
+      - name: "fooldal_kiemelt_info"
+        label: "Főoldali kiemelt információ szerkesztése"
+        file: "src/content/pages/fooldal-kiemelt-info.md"
+        fields:
+          - { label: "Cím (belső)", name: "title", widget: "string", default: "Főoldali kiemelt információ" }
+          - { label: "Frissítve", name: "updatedAt", widget: "datetime", required: false }
+          - { label: "Aktív a sáv?", name: "highlightActive", widget: "boolean", default: false }
+          - { label: "Kiemelt szöveg", name: "highlightText", widget: "string", required: false }
+          - { label: "Cél link", name: "highlightLink", widget: "string", required: false }
+          - { label: "Törzsszöveg (opcionális)", name: "body", widget: "markdown", required: false }
+
+      - name: "felveteli_oldal"
+        label: "Felvételi oldal szerkesztése"
+        file: "src/content/pages/felveteli.md"
+        fields:
+          - { label: "Cím", name: "title", widget: "string", default: "Felvételi" }
+          - { label: "Frissítve", name: "updatedAt", widget: "datetime", required: false }
+          - { label: "Tartalom", name: "body", widget: "markdown" }
+
+      - name: "kapcsolati_adatok"
+        label: "Kapcsolati adatok szerkesztése"
+        file: "src/content/pages/kapcsolat.md"
+        fields:
+          - { label: "Cím", name: "title", widget: "string", default: "Kapcsolat" }
+          - { label: "Frissítve", name: "updatedAt", widget: "datetime", required: false }
+          - { label: "Cím (postai)", name: "address", widget: "string", required: false }
+          - { label: "Telefonszám", name: "phone", widget: "string", required: false }
+          - { label: "E-mail cím", name: "email", widget: "string", required: false }
+          - { label: "KRÉTA URL", name: "kretaUrl", widget: "string", required: false, hint: "Ideiglenes/általános KRÉTA cél — cseréld ki az intézményi stabil URL-re, ha az IT rendszergazda megadja." }
+          - { label: "Ügyfélfogadási rend", name: "officeHours", widget: "string", required: false }
+          - { label: "Tartalom (opcionális)", name: "body", widget: "markdown", required: false }
+
+      - name: "rolunk_oldal"
+        label: "Rólunk oldal szerkesztése"
+        file: "src/content/pages/rolunk.md"
+        fields:
+          - { label: "Cím", name: "title", widget: "string", default: "Rólunk" }
+          - { label: "Frissítve", name: "updatedAt", widget: "datetime", required: false }
+          - { label: "Tartalom", name: "body", widget: "markdown" }

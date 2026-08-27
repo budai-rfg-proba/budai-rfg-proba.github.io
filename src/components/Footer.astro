@@ -1,0 +1,114 @@
+---
+import Logo from './Logo.astro';
+import { SCHOOL_NAME, FOOTER_LEGAL_NAV, MAIN_NAV, KRETA_URL, withBase } from '../lib/nav';
+import { getEntry } from 'astro:content';
+
+const kapcsolat = await getEntry('pages', 'kapcsolat').catch(() => undefined);
+const address = kapcsolat?.data.address;
+const phone = kapcsolat?.data.phone;
+const email = kapcsolat?.data.email;
+---
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <Logo size={40} />
+        <span>{SCHOOL_NAME}</span>
+      </div>
+      {address && <p class="muted">{address}</p>}
+      <p class="muted">
+        {phone && <>Tel.: {phone}<br /></>}
+        {email && <a href={`mailto:${email}`}>{email}</a>}
+      </p>
+      <a class="kreta-link" href={KRETA_URL} target="_blank" rel="noopener noreferrer">KRÉTA belépés →</a>
+    </div>
+
+    <div class="footer-col">
+      <h3>Navigáció</h3>
+      <ul role="list">
+        {MAIN_NAV.slice(1).map((item) => (
+          <li><a href={withBase(item.href)}>{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h3>Jogi és intézményi információk</h3>
+      <ul role="list">
+        {FOOTER_LEGAL_NAV.map((item) => (
+          <li><a href={withBase(item.href)}>{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p class="muted">© {new Date().getFullYear()} {SCHOOL_NAME}. A honlap 0. verziós prototípus — nem éles tartalom.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-surface-offset);
+    border-top: 1px solid var(--color-divider);
+    padding-block: var(--space-16) var(--space-8);
+  }
+  .footer-grid {
+    display: grid;
+    gap: var(--space-10);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 1.4fr 1fr 1fr;
+    }
+  }
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-display);
+    font-weight: 600;
+    margin-bottom: var(--space-3);
+  }
+  .footer-brand p {
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+  }
+  .muted {
+    color: var(--color-text-muted);
+  }
+  .kreta-link {
+    display: inline-block;
+    margin-top: var(--space-2);
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+  .footer-col h3 {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    margin-bottom: var(--space-4);
+    color: var(--color-text);
+  }
+  .footer-col ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .footer-col a {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .footer-col a:hover {
+    color: var(--color-primary);
+  }
+  .footer-bottom {
+    margin-top: var(--space-12);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-divider);
+  }
+  .footer-bottom p {
+    font-size: var(--text-xs);
+  }
+</style>

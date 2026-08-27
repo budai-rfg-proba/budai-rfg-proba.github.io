@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getEntry } from 'astro:content';
+import { KRETA_URL } from '../../lib/nav';
+
+const page = await getEntry('pages', 'kapcsolat');
+const { Content } = await page.render();
+const { address, phone, email, officeHours } = page.data;
+---
+<BaseLayout title="Kapcsolat" description="Az iskola elérhetőségei és ügyfélfogadási rendje.">
+  <section class="section">
+    <div class="container container--narrow">
+      <span class="eyebrow">Kapcsolat</span>
+      <h1>Elérhetőségeink</h1>
+
+      <div class="contact-grid">
+        <div class="contact-card">
+          <h2>Cím</h2>
+          <p>{address}</p>
+        </div>
+        <div class="contact-card">
+          <h2>Telefon / e-mail</h2>
+          <p>{phone}</p>
+          {email && <p><a href={`mailto:${email}`}>{email}</a></p>}
+        </div>
+        <div class="contact-card">
+          <h2>Ügyfélfogadás</h2>
+          <p>{officeHours}</p>
+        </div>
+        <div class="contact-card">
+          <h2>KRÉTA</h2>
+          <p>A digitális ellenőrző külső, KRÉTA rendszerben érhető el.</p>
+          <a class="btn btn-primary" href={KRETA_URL} target="_blank" rel="noopener noreferrer">KRÉTA belépés →</a>
+        </div>
+      </div>
+
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: var(--text-2xl);
+    margin-block: var(--space-2) var(--space-8);
+  }
+  .contact-grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin-bottom: var(--space-10);
+  }
+  .contact-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+  }
+  .contact-card h2 {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+    font-family: var(--font-body);
+    font-weight: 700;
+  }
+  .contact-card p {
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-1);
+  }
+  .contact-card .btn {
+    margin-top: var(--space-3);
+  }
+  .prose :global(h2) {
+    font-size: var(--text-lg);
+    margin-block: var(--space-6) var(--space-2);
+  }
+  .prose :global(p) {
+    margin-bottom: var(--space-3);
+    color: var(--color-text-muted);
+  }
+</style>

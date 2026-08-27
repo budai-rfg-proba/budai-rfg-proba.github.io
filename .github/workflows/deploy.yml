@@ -1,0 +1,58 @@
+name: Build és publikálás GitHub Pages-re
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repó letöltése
+        uses: actions/checkout@v4
+
+      - name: Node.js beállítása
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Függőségek telepítése
+        run: npm ci
+
+      - name: GitHub Pages beállítás felderítése
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Astro build
+        env:
+          # Projekt-alútvonal (pl. org.github.io/repo/) — az astro.config.mjs ezt olvassa be.
+          BASE_PATH: /${{ github.event.repository.name }}/
+          SITE_URL: https://${{ github.repository_owner }}.github.io
+        run: npm run build
+
+      - name: Build feltöltése Pages artifactként
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publikálás GitHub Pages-re
+        id: deployment
+        uses: actions/deploy-pages@v4

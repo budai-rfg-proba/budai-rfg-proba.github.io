@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { getCollection } from 'astro:content';
+import { slugify, withBase } from '../../lib/nav';
+
+const entries = (
+  await getCollection('news', ({ data }) => data.status === 'publikált' && data.category === 'Iskolai élet')
+).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const links = [
+  { label: 'Versenyek és eredmények', href: `/hirek/kategoria/${slugify('Versenyek és eredmények')}/` },
+  { label: 'Közösségeink', href: '/kozossegeink/' },
+  { label: 'Sport', href: `/hirek/cimke/${slugify('sport')}/` },
+  { label: 'Rákóczi Röplap', href: `/hirek/kategoria/${slugify('Rákóczi Röplap')}/` },
+  { label: 'Gólyatábor', href: `/hirek/cimke/${slugify('gólyatábor')}/` },
+];
+---
+<BaseLayout title="Iskolai élet" description="Versenyek, közösségek, sport, projektek és a Rákóczi Röplap.">
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Iskolai élet</span>
+      <h1>Iskolai élet</h1>
+      <p class="muted">Versenyek, közösségek, sport és projektek — mindegyik automatikusan frissül új tartalom publikálásakor.</p>
+
+      <div class="chip-links">
+        {links.map((link) => (
+          <a class="chip-link" href={withBase(link.href)}>{link.label}</a>
+        ))}
+      </div>
+
+      <div class="section-heading">
+        <h2>Legfrissebb az Iskolai élet kategóriában</h2>
+      </div>
+      {entries.length > 0 ? (
+        <div class="news-grid">
+          {entries.map((entry) => <NewsCard entry={entry} />)}
+        </div>
+      ) : (
+        <p class="muted">Jelenleg nincs publikált tartalom ebben a kategóriában.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: var(--text-2xl);
+    margin-block: var(--space-2);
+  }
+  .muted {
+    color: var(--color-text-muted);
+    max-width: var(--content-narrow);
+    margin-bottom: var(--space-6);
+  }
+  .chip-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-10);
+  }
+  .chip-link {
+    padding: var(--space-3) var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+  .chip-link:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+  .news-grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+</style>

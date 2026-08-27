@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getEntry, getCollection } from 'astro:content';
+import NewsCard from '../../components/NewsCard.astro';
+import { withBase } from '../../lib/nav';
+
+const page = await getEntry('pages', 'felveteli');
+const { Content } = await page.render();
+const relatedNews = (
+  await getCollection('news', ({ data }) => data.status === 'publikált' && data.category === 'Felvételi')
+).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+<BaseLayout title="Felvételi" description="Felvételi tájékoztató, határidők és kapcsolódó hírek.">
+  <section class="section">
+    <div class="container container--narrow">
+      <span class="eyebrow">Felvételi</span>
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </section>
+
+  {relatedNews.length > 0 && (
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Felvételivel kapcsolatos hírek</h2>
+          <a class="more-link" href={withBase('/hirek/kategoria/felveteli/')}>Összes →</a>
+        </div>
+        <div class="news-grid">
+          {relatedNews.map((entry) => <NewsCard entry={entry} />)}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .prose :global(h2) {
+    font-size: var(--text-xl);
+    margin-block: var(--space-6) var(--space-3);
+  }
+  .prose :global(h3) {
+    font-size: var(--text-lg);
+    margin-block: var(--space-5) var(--space-2);
+  }
+  .prose :global(p) {
+    margin-bottom: var(--space-4);
+    line-height: 1.75;
+  }
+  .prose :global(ul) {
+    padding-left: var(--space-5);
+    margin-bottom: var(--space-4);
+  }
+  .prose :global(li) {
+    list-style: disc;
+    margin-bottom: var(--space-1);
+  }
+  .section-alt {
+    background: var(--color-surface-offset);
+  }
+  .news-grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+</style>

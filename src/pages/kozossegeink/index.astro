@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { getCollection } from 'astro:content';
+
+const entries = (
+  await getCollection('news', ({ data }) => data.status === 'publikált' && data.category === 'Közösségeink')
+).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+<BaseLayout title="Közösségeink" description="Diákönkormányzat, közösségi programok és csoportok az iskolában.">
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Közösségeink</span>
+      <h1>Közösségeink</h1>
+      <p class="muted">A diákönkormányzat, szakkörök és közösségi csoportok hírei és programjai.</p>
+
+      {entries.length > 0 ? (
+        <div class="news-grid">
+          {entries.map((entry) => <NewsCard entry={entry} />)}
+        </div>
+      ) : (
+        <p class="muted">Jelenleg nincs publikált tartalom ebben a kategóriában.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: var(--text-2xl);
+    margin-block: var(--space-2);
+  }
+  .muted {
+    color: var(--color-text-muted);
+    max-width: var(--content-narrow);
+    margin-bottom: var(--space-8);
+  }
+  .news-grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+</style>

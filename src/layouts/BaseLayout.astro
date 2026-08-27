@@ -1,0 +1,75 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/base.css';
+import { SCHOOL_NAME, withBase } from '../lib/nav';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title,
+  description = 'A Budapest II. Kerületi II. Rákóczi Ferenc Gimnázium honlapjának 0. verziós, tesztcélú prototípusa.',
+  image = withBase('/images/hero-iskola.jpg'),
+} = Astro.props;
+
+const pageTitle = title === SCHOOL_NAME ? title : `${title} — ${SCHOOL_NAME}`;
+---
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={image} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=erode@400,500,600&f[]=general-sans@400,500,600,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script is:inline>
+      (function () {
+        var d = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', d);
+      })();
+    </script>
+    <style>
+      /* 0. verzió figyelmeztető szalag — a prototípus jellegre utal minden oldalon. */
+      .prototype-banner {
+        background: var(--color-gold-highlight, #ecdfbf);
+        color: var(--color-text);
+        font-size: var(--text-xs);
+        text-align: center;
+        padding: var(--space-2) var(--space-4);
+        border-bottom: 1px solid var(--color-border);
+      }
+      .prototype-banner strong {
+        color: var(--color-primary);
+      }
+    </style>
+  </head>
+  <body>
+    <a href="#tartalom" class="skip-link">Ugrás a tartalomra</a>
+    <div class="prototype-banner">
+      <strong>0. verzió — tesztcélú prototípus.</strong> Ez nem az iskola éles honlapja; a tartalom rendszertesztelésre szolgál.
+    </div>
+    <Header />
+    <main id="tartalom">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

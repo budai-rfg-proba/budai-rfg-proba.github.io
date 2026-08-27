@@ -1,0 +1,92 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDateHu, withBase } from '../lib/nav';
+
+interface Props {
+  entry: CollectionEntry<'events'>;
+}
+const { entry } = Astro.props;
+const { title, startDate, endDate, location, description, audience, relatedNews } = entry.data;
+---
+<div class="event-card card">
+  <div class="event-date">
+    <span class="event-day">{startDate.getDate()}</span>
+    <span class="event-month">{new Intl.DateTimeFormat('hu-HU', { month: 'short' }).format(startDate)}</span>
+  </div>
+  <div class="event-body">
+    <div class="event-meta">
+      <span class="badge badge--gold">{audience}</span>
+      <span class="event-when">
+        {formatDateHu(startDate)}{endDate ? ` – ${formatDateHu(endDate)}` : ''}
+      </span>
+    </div>
+    <h3>{title}</h3>
+    <p class="event-location">📍 {location}</p>
+    <p class="event-desc">{description}</p>
+    {relatedNews && (
+      <a class="event-link" href={withBase(`/hirek/${relatedNews}/`)}>Kapcsolódó hír →</a>
+    )}
+  </div>
+</div>
+
+<style>
+  .event-card {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    align-items: flex-start;
+  }
+  .event-date {
+    flex: none;
+    width: 4.5rem;
+    text-align: center;
+    background: var(--color-primary-highlight);
+    color: var(--color-primary);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) 0;
+  }
+  .event-day {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: 1;
+  }
+  .event-month {
+    display: block;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .event-body {
+    flex: 1;
+  }
+  .event-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  .event-body h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-bottom: var(--space-1);
+  }
+  .event-location {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+  .event-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .event-link {
+    display: inline-block;
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+</style>

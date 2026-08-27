@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import NewsCard from '../../../components/NewsCard.astro';
+import { getCollection } from 'astro:content';
+import { slugify, withBase } from '../../../lib/nav';
+
+export async function getStaticPaths() {
+  const allNews = await getCollection('news', ({ data }) => data.status === 'publikált');
+  const tagMap = new Map<string, string>();
+  allNews.forEach((entry) => {
+    entry.data.tags.forEach((tag) => tagMap.set(slugify(tag), tag));
+  });
+  return Array.from(tagMap.entries()).map(([slug, label]) => ({
+    params: { tag: slug },
+    props: { label },
+  }));
+}
+
+const { tag } = Astro.params;
+const { label } = Astro.props;
+const entries = (
+  await getCollection('news', ({ data }) => data.status === 'publikált' && data.tags.some((t) => slugify(t) === tag))
+).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+<BaseLayout title={`Címke: ${label}`} description={`A "${label}" címkével ellátott hírek archívuma.`}>
+  <section class="section">
+    <div class="container">
+      <div class="page-heading">
+        <span class="eyebrow">Címke</span>
+        <h1>#{label}</h1>
+        <p class="muted">{entries.length} hír ezzel a címkével.</p>
+      </div>
+      {entries.length > 0 ? (
+        <div class="news-grid">
+          {entries.map((entry) => <NewsCard entry={entry} />)}
+        </div>
+      ) : (
+        <p class="muted">Jelenleg nincs hír ezzel a címkével.</p>
+      )}
+      <a class="btn btn-outline back-link" href={withBase('/hirek/')}>← Vissza az összes hírhez</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-heading {
+    margin-bottom: var(--space-8);
+  }
+  .page-heading h1 {
+    font-size: var(--text-2xl);
+    margin-block: var(--space-2);
+  }
+  .news-grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    margin-bottom: var(--space-8);
+  }
+  .muted {
+    color: var(--color-text-muted);
+  }
+</style>
