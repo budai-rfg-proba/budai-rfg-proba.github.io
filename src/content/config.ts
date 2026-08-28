@@ -1,5 +1,12 @@
 import { defineCollection, z } from 'astro:content';
 
+// A Sveltia/Decap CMS datetime widget üres mezőnél '' (üres string) értéket ír ki a
+// frontmatterbe, nem hagyja el a mezőt teljesen. A z.date().optional() ezt nem kezeli
+// (csak az undefined-et engedi el), és ez buildhibát okoz. Ez a helper üres string
+// esetén undefined-re cseréli az értéket, mielőtt a dátum-validáció lefutna.
+const optionalDate = () =>
+  z.preprocess((val) => (val === '' || val == null ? undefined : val), z.date().optional());
+
 // Elsődleges hírkategóriák — a specifikáció szerint rövid, véglegesnek tekintett lista.
 // Ne bővítsük egyetlen hír kedvéért; a keresztkapcsolatokra a tags mező szolgál.
 export const NEWS_CATEGORIES = [
@@ -20,7 +27,7 @@ const news = defineCollection({
     category: z.enum(NEWS_CATEGORIES),
     tags: z.array(z.string()).default([]),
     pubDate: z.date(),
-    expiryDate: z.date().optional(),
+    expiryDate: optionalDate(),
     status: z.enum(['vázlat', 'felülvizsgálatra küldve', 'publikált']).default('publikált'),
     image: z.string().optional(),
     imageAlt: z.string().optional(),
@@ -36,7 +43,7 @@ const events = defineCollection({
   schema: z.object({
     title: z.string(),
     startDate: z.date(),
-    endDate: z.date().optional(),
+    endDate: optionalDate(),
     location: z.string(),
     description: z.string(),
     audience: z.enum(['diákok', 'szülők', 'mindenki']).default('mindenki'),
@@ -59,8 +66,8 @@ const documents = defineCollection({
     title: z.string(),
     group: z.enum(DOCUMENT_GROUPS),
     description: z.string().optional(),
-    validFrom: z.date().optional(),
-    validUntil: z.date().optional(),
+    validFrom: optionalDate(),
+    validUntil: optionalDate(),
     file: z.string().optional(),
     archived: z.boolean().default(false),
     status: z.enum(['vázlat', 'felülvizsgálatra küldve', 'publikált']).default('publikált'),
@@ -73,7 +80,7 @@ const pages = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
-    updatedAt: z.date().optional(),
+    updatedAt: optionalDate(),
     // Kiemelt információs sáv
     highlightActive: z.boolean().optional(),
     highlightText: z.string().optional(),
