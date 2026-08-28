@@ -12,7 +12,7 @@ imageAlt: ''
 author: Havassy András
 relatedDocument: ''
 relatedLink: ''
-featured: false
+featured: true
 ---
 
 Na most ugrik a majom a lecsóba!
