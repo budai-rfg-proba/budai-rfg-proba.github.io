@@ -11,9 +11,9 @@
 
 backend:
   name: github
-  repo: FELHASZNALONEV/rfg-honlap # TODO: cseréld ki az éles repóra
+  repo: budai-rfg-proba/budai-rfg-proba.github.io
   branch: main
-  base_url: https://your-sveltia-cms-auth.workers.dev # TODO: sveltia-cms-auth worker URL-je
+  base_url: https://sveltia-cms-auth.havassyandras.workers.dev
   auth_endpoint: auth
 
 publish_mode: editorial_workflow
@@ -21,8 +21,8 @@ publish_mode: editorial_workflow
 media_folder: "public/images/feltoltesek"
 public_folder: "/images/feltoltesek"
 
-site_url: https://FELHASZNALONEV.github.io/rfg-honlap
-display_url: https://FELHASZNALONEV.github.io/rfg-honlap
+site_url: https://budai-rfg-proba.github.io/
+display_url: https://budai-rfg-proba.github.io/
 logo_url: /favicon.svg
 
 locale: "hu"
