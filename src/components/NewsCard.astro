@@ -9,7 +9,8 @@ interface Props {
 const { entry, featured = false } = Astro.props;
 const { title, excerpt, category, tags, pubDate, image, imageAlt } = entry.data;
 ---
-<a class={`news-card card card--interactive ${featured ? 'news-card--featured' : ''}`} href={withBase(`/hirek/${entry.slug}/`)}>
+<div class={`news-card card card--interactive ${featured ? 'news-card--featured' : ''}`}>
+  <a class="news-card-link" href={withBase(`/hirek/${entry.slug}/`)} aria-label={title}></a>
   <div class="news-card-media">
     {image ? (
       <img src={withBase(image)} alt={imageAlt || ''} loading={featured ? 'eager' : 'lazy'} />
@@ -21,7 +22,7 @@ const { title, excerpt, category, tags, pubDate, image, imageAlt } = entry.data;
   </div>
   <div class="news-card-body">
     <div class="news-card-meta">
-      <a class="badge" href={withBase(`/hirek/kategoria/${slugify(category)}/`)} onclick="event.stopPropagation()">{category}</a>
+      <a class="badge" href={withBase(`/hirek/kategoria/${slugify(category)}/`)}>{category}</a>
       <time datetime={pubDate.toISOString()}>{formatDateHu(pubDate)}</time>
     </div>
     <h3>{title}</h3>
@@ -34,7 +35,7 @@ const { title, excerpt, category, tags, pubDate, image, imageAlt } = entry.data;
       </ul>
     )}
   </div>
-</a>
+</div>
 
 <style>
   .news-card {
@@ -42,11 +43,23 @@ const { title, excerpt, category, tags, pubDate, image, imageAlt } = entry.data;
     flex-direction: column;
     color: var(--color-text);
     height: 100%;
+    position: relative;   /* ÚJ */
+  }
+  .news-card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .news-card-meta,
+  .news-card-tags {
+    position: relative;
+    z-index: 2;
   }
   .news-card-media {
     aspect-ratio: 16/9;
     background: var(--color-surface-offset);
     overflow: hidden;
+	flex-shrink: 0;
   }
   .news-card-media img {
     width: 100%;
