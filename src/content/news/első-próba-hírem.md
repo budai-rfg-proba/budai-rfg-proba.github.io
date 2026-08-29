@@ -7,7 +7,7 @@ tags:
 pubDate: 2026-08-28T20:47:00
 expiryDate: ''
 status: publikált
-image: ''
+image: /images/feltoltesek/images.jpg
 imageAlt: ''
 author: Havassy András
 relatedDocument: ''
