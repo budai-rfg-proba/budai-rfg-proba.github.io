@@ -1,11 +1,18 @@
 ---
-title: "Tankönyvek átvétele"
-excerpt: "A 2026/2027-es tanév tankönyveinek átvételi rendjéről és időpontjairól tájékozódhatnak."
-category: "Tanév rendje"
-tags: ["tankönyv", "új tanév"]
+title: Tankönyvek átvétele
+excerpt: A 2026/2027-es tanév tankönyveinek átvételi rendjéről és időpontjairól tájékozódhatnak.
+category: Tanév rendje
+tags:
+  - tankönyv
+  - új tanév
 pubDate: 2026-08-22
-status: "publikált"
-author: "Projektgazda"
+expiryDate: ''
+status: publikált
+image: https://picsum.photos/id/180/1920/1280.webp
+imageAlt: ''
+author: Projektgazda
+relatedDocument: ''
+relatedLink: ''
 featured: false
 ---
 
