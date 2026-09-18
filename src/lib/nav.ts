@@ -30,6 +30,11 @@ export const FOOTER_LEGAL_NAV = [
 // minden belső hivatkozást és statikus fájlt ezzel kell prefixelni, különben a
 // linkek egyedi domainen működnek, de alútvonalon eltörnek.
 export function withBase(path: string): string {
+  // A teljes külső URL-eket, protokoll-relatív URL-eket és horgonyokat változatlanul hagyjuk.
+  if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(path)) {
+    return path;
+  }
+
   const base = import.meta.env.BASE_URL || '/';
   const cleanBase = base.endsWith('/') ? base : `${base}/`;
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
