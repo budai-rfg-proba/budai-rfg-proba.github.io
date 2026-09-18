@@ -1,11 +1,18 @@
 ---
-title: "Évnyitó ünnepség"
-excerpt: "A 2026/2027-es tanévet nyitó ünnepség időpontja és helyszíne."
-category: "Tanév rendje"
-tags: ["ünnepség", "új tanév"]
+title: Évnyitó ünnepség
+excerpt: A 2026/2027-es tanévet nyitó ünnepség időpontja és helyszíne.
+category: Tanév rendje
+tags:
+  - ünnepség
+  - új tanév
 pubDate: 2026-08-28
-status: "publikált"
-author: "Projektgazda"
+expiryDate: ''
+status: publikált
+image: https://picsum.photos/id/1025/1920/1280.webp
+imageAlt: ''
+author: Projektgazda
+relatedDocument: ''
+relatedLink: ''
 featured: false
 ---
 
