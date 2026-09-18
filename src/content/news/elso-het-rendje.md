@@ -8,7 +8,7 @@ tags:
 pubDate: 2026-08-27
 expiryDate: ''
 status: publikált
-image: https://picsum.photos/id/20/1920/1280.webp
+image: https://picsum.photos/id/357/1920/1280.webp
 imageAlt: felvételi
 author: Projektgazda
 relatedDocument: ''
