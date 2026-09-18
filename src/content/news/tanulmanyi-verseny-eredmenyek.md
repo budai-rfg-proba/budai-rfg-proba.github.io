@@ -1,11 +1,19 @@
 ---
-title: "Országos középiskolai tanulmányi verseny – eredmények"
-excerpt: "Iskolánk diákjai kiemelkedő eredményeket értek el az idei tanulmányi versenyen."
-category: "Versenyek és eredmények"
-tags: ["verseny", "matematika", "eredmény"]
+title: Országos középiskolai tanulmányi verseny – eredmények
+excerpt: Iskolánk diákjai kiemelkedő eredményeket értek el az idei tanulmányi versenyen.
+category: Versenyek és eredmények
+tags:
+  - verseny
+  - matematika
+  - eredmény
 pubDate: 2026-06-15
-status: "publikált"
-author: "Projektgazda"
+expiryDate: ''
+status: publikált
+image: https://picsum.photos/id/885/1920/1280.webp
+imageAlt: ''
+author: Projektgazda
+relatedDocument: ''
+relatedLink: ''
 featured: false
 ---
 
