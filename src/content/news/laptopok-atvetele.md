@@ -1,11 +1,18 @@
 ---
-title: "Digitális eszközök (laptopok) átvétele"
-excerpt: "A digitális munkarendhez biztosított laptopok átvételének rendjéről és a felelős használat szabályairól."
-category: "Hivatalos tájékoztatók"
-tags: ["digitális eszköz", "laptop"]
+title: Digitális eszközök (laptopok) átvétele
+excerpt: A digitális munkarendhez biztosított laptopok átvételének rendjéről és a felelős használat szabályairól.
+category: Hivatalos tájékoztatók
+tags:
+  - digitális eszköz
+  - laptop
 pubDate: 2026-08-25
-status: "publikált"
-author: "Projektgazda"
+expiryDate: ''
+status: publikált
+image: https://picsum.photos/id/1/1920/1280.webp
+imageAlt: ''
+author: Projektgazda
+relatedDocument: ''
+relatedLink: ''
 featured: false
 ---
 
