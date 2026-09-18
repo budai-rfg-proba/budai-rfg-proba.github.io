@@ -1,13 +1,19 @@
 ---
-title: "Beiratkozás a 2026/2027-es tanévre"
-excerpt: "Az új tanévre történő beiratkozás időpontjait és a szükséges dokumentumok listáját az alábbiakban tesszük közzé."
-category: "Hivatalos tájékoztatók"
-tags: ["új tanév", "adminisztráció", "gólyák"]
+title: Beiratkozás a 2026/2027-es tanévre
+excerpt: Az új tanévre történő beiratkozás időpontjait és a szükséges dokumentumok listáját az alábbiakban tesszük közzé.
+category: Hivatalos tájékoztatók
+tags:
+  - új tanév
+  - adminisztráció
+  - gólyák
 pubDate: 2026-08-20
-status: "publikált"
-image: "/images/hero-iskola.jpg"
-imageAlt: "A Budapest II. Kerületi II. Rákóczi Ferenc Gimnázium épületének homlokzata napfényben"
-author: "Projektgazda"
+expiryDate: ''
+status: publikált
+image: /images/feltoltesek/rakoczi.jpg
+imageAlt: A Budapest II. Kerületi II. Rákóczi Ferenc Gimnázium épületének homlokzata napfényben
+author: Projektgazda
+relatedDocument: ''
+relatedLink: ''
 featured: true
 ---
 
