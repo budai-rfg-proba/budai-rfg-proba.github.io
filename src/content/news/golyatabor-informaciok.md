@@ -1,11 +1,19 @@
 ---
-title: "Gólyatábor – információk"
-excerpt: "Minden, amit a leendő kilencedikeseknek és szülőknek tudni kell a szeptemberi gólyatáborról."
-category: "Iskolai élet"
-tags: ["gólyák", "9. évfolyam", "gólyatábor"]
+title: Gólyatábor – információk
+excerpt: Minden, amit a leendő kilencedikeseknek és szülőknek tudni kell a szeptemberi gólyatáborról.
+category: Iskolai élet
+tags:
+  - gólyák
+  - 9. évfolyam
+  - gólyatábor
 pubDate: 2026-08-26
-status: "publikált"
-author: "Projektgazda"
+expiryDate: ''
+status: publikált
+image: https://picsum.photos/id/559/1920/1280.webp
+imageAlt: ''
+author: Projektgazda
+relatedDocument: ''
+relatedLink: ''
 featured: false
 ---
 
