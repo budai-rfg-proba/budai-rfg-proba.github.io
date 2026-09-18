@@ -1,11 +1,18 @@
 ---
-title: "Diákönkormányzat – tavaszi programtervezet"
-excerpt: "A diákönkormányzat összegyűjtötte a következő félév közösségi programjainak ötleteit."
-category: "Közösségeink"
-tags: ["diákönkormányzat", "közösség"]
+title: Diákönkormányzat – tavaszi programtervezet
+excerpt: A diákönkormányzat összegyűjtötte a következő félév közösségi programjainak ötleteit.
+category: Közösségeink
+tags:
+  - diákönkormányzat
+  - közösség
 pubDate: 2026-03-10
-status: "publikált"
-author: "Projektgazda"
+expiryDate: ''
+status: publikált
+image: https://picsum.photos/id/64/1920/1280.webp
+imageAlt: ''
+author: Projektgazda
+relatedDocument: ''
+relatedLink: ''
 featured: false
 ---
 
