@@ -13,6 +13,8 @@ backend:
   name: github
   repo: budai-rfg-proba/budai-rfg-proba.github.io
   branch: main
+  open_authoring: true
+  auth_scope: public_repo
   base_url: https://sveltia-cms-auth.havassyandras.workers.dev
   auth_endpoint: auth
 
